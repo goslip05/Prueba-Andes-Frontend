@@ -67,7 +67,7 @@ export const useAuth = ({middleware, url}) => {
           },
         });
   
-        localStorage.setItem('AUTH_TOKEN', response.data.token);
+        localStorage.setItem('AUTH_TOKEN', response.data.access_token);
         setErrores([]);
         await mutate();
         window.location.href = '/panel';
