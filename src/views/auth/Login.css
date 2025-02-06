@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Patua+One&display=swap');
 
 .fondo{
-    background-image: url('/assets/fondo_login.png');
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
@@ -25,7 +24,7 @@
 }
 
 .login100-form-avatar img{
-    width: 240px;
+    width: 200px;
     overflow: hidden;
     margin: 0 auto;
 }
