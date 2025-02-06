@@ -8,7 +8,7 @@ import { FaTachometerAlt, FaFolder, FaUsers, FaList, FaWarehouse } from "react-i
 import { TbSubtask } from "react-icons/tb";
 import $ from "jquery"
 
-import logo from '../../assets/images/code.png';
+import logo from '../../assets/images/icon_andes.png';
 import { handleClickSidebarToggle } from "../../helpers";
 import { AiFillProduct } from "react-icons/ai";
 
@@ -38,7 +38,7 @@ export default function Sidebar({ user }) {
 
       {/* Logo */}
       <Link to={'/panel'} className="sidebar-brand align-items-center justify-content-center">
-        <img src={logo} className="img-fluid" width="80%" alt="Abbott Logo" />
+        <img src={logo} className="img-fluid" width="80%" alt="Andes Logo" />
         <div className="sidebar-brand-text pt-3">TAREAS ANDES</div>
       </Link>
 
