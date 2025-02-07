@@ -185,7 +185,7 @@ export default function EditTask() {
                   <div className="input_class">
                     <div className="form-floating mt-4 mb-3">
                       <input
-                        type="text"
+                        type="date"
                         className="form-control rounded-pill"
                         name="date"
                         value={date}

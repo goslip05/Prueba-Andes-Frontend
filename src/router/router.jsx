@@ -8,6 +8,7 @@ import EditTask from "../views/admin/task/EditTask";
 import AddTask from "../views/admin/task/AddTask";
 import Register from "../views/auth/Register";
 import RegisterLayout from "../layouts/RegisterLayout";
+import User from "../views/admin/User";
 
 
 const router = createBrowserRouter([
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
             {
                 index: true,
                 element: <Inicio />
+            },
+            {
+                path: '/panel/user',
+                element: <User />
             },
             {
                 path: '/panel/tareas',

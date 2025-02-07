@@ -34,9 +34,8 @@ Bienvenido. Esta es la prueba técnica para validar mis conocimientos y fortalez
 ## INSTRUCCIONES
 
 - Se consume la api creada en Laravel 9 :
-      ```bash
       https://github.com/goslip05/Prueba-Andes-Backend.git
-      ```
+    
 
 
 ## Instalación:

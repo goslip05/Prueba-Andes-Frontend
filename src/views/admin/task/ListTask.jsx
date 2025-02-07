@@ -8,10 +8,12 @@ import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { Link } from "react-router-dom";
 import { FaEdit, FaEye, FaShare, FaTrashAlt } from "react-icons/fa";
+import { Accordion, AccordionTab } from "primereact/accordion";
 import { Tag } from "primereact/tag";
 import { FilterMatchMode, FilterOperator } from "primereact/api";
 import { Skeleton } from "primereact/skeleton";
 import { MdAddCircle } from "react-icons/md";
+import AsyncSelect from "react-select/async";
 
 //sweetalert2
 import withReactContent from "sweetalert2-react-content";
@@ -33,6 +35,14 @@ export default function ListTask() {
   const [selectTask, setSelectTask] = useState(null);
   const [listTask, setListTask] = useState([]);
   const [globalFilterValue, setGlobalFilterValue] = useState("");
+  const [menuPortalTarget, setMenuPortalTarget] = useState(null);
+  const [title, setTitle] = useState(null);
+  const [estadoInterno, setEstadoInterno] = useState(null);
+  const [opcionesEstado, setOpcionesEstado] = useState([
+    { value: "pendiente", label: "Pendiente" },
+    { value: "en progreso", label: "En Progreso" },
+    { value: "completada", label: "Completado" },
+  ]);
   const [filters, setFilters] = useState({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
     id: {
@@ -60,6 +70,24 @@ export default function ListTask() {
   //context del modal swall
   const MySwal = withReactContent(Swal);
 
+  //select de estato
+  const loadOptionsEstado = (inputValue, callback) => {
+    setTimeout(() => {
+      const filteredOptions = filterEstado(inputValue);
+      callback(filteredOptions);
+    }, 1000);
+  };
+  const filterEstado = (inputValue) => {
+    return opcionesEstado.filter((i) =>
+      i.label.toLowerCase().includes(inputValue.toLowerCase())
+    );
+  };
+  const handleChangeOpcionesEstado = (selectedOption) => {
+    //Verifica si selectedOption es null o undefined antes de acceder a .value
+    const selectedValue = selectedOption ? selectedOption.value : null;
+    setEstadoInterno(selectedValue);
+  };
+
   const obtenerlistTask = async (id) => {
     try {
       if (id === 1) {
@@ -75,7 +103,7 @@ export default function ListTask() {
           },
         });
       }
-      const responseApi = await getListTaskApi();
+      const responseApi = await getListTaskApi(title,estadoInterno);
 
       if (responseApi.data) {
         setListTask(responseApi.data);
@@ -280,25 +308,73 @@ export default function ListTask() {
   //iniciar
   useEffect(() => {
     obtenerlistTask(0);
-  }, []);
+  }, [ title, estadoInterno,]);
   return (
     <div>
       <div className="p-3">
         <h5 className="mb-4 text-gray-800">Listado de tareas</h5>
-        <div className="row mb-4">
-            <div className="col-md-12 d-flex justify-content-start  fw-bold">
-              <Link
-                to={`/panel/tareas/crear`}
-                className="btn btn-success btn-md"
-              >
-                <div className="d-flex align-items-center px-3">
-                  <span className="fw-bold mr-2 mb-1">
-                    <MdAddCircle />
-                  </span>
-                  <span class="fw-bold">Crear Tarea</span>
+        <Accordion activeIndex={0} className="mb-4">
+          <AccordionTab header="Filtros" >
+            <div className="row ">
+              <div className="col-12 col-md-6">
+                <div className="mb-3">
+                  <label className="form-label">
+                    <small className="font-bold block mb-2">TITULO</small>
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control rounded-pill"
+                    name="title"
+                    value={title}
+                    required
+                    onChange={(e) => setTitle(e.target.value)}
+                  />
                 </div>
-              </Link>
+              </div>
+              <div className="col-12 col-md-3">
+                <div className="mb-3">
+                  <label className="form-label">
+                    <small className="font-bold block mb-2">ESTADO</small>
+                  </label>
+                  <AsyncSelect
+                    className="w-full select-custom"
+                    placeholder="- Seleccione estado -"
+                    noOptionsMessage={() => "No se encontro ningun resultado!"}
+                    isClearable={true}
+                    cacheOptions
+                    defaultOptions={opcionesEstado}
+                    loadOptions={loadOptionsEstado}
+                    onChange={handleChangeOpcionesEstado}
+                    menuPortalTarget={menuPortalTarget}
+                    styles={{
+                      menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                    }}
+                  />
+                </div>
+              </div>
+              <div className="col-12 col-md-3 align-self-center d-grid gap-2">
+                <button
+                  type="button"
+                  className="btn btn-primary mt-3"
+                  onClick={() => obtenerlistTask(1)}
+                >
+                  Buscar
+                </button>
+              </div>
             </div>
+          </AccordionTab>
+        </Accordion>
+        <div className="row mb-4">
+          <div className="col-md-12 d-flex justify-content-start  fw-bold">
+            <Link to={`/panel/tareas/crear`} className="btn btn-success btn-md">
+              <div className="d-flex align-items-center px-3">
+                <span className="fw-bold mr-2 mb-1">
+                  <MdAddCircle />
+                </span>
+                <span class="fw-bold">Crear Tarea</span>
+              </div>
+            </Link>
+          </div>
         </div>
 
         {loadingData ? ( // Si loadingData es true, mostrar Skeleton

@@ -1,15 +1,16 @@
 const urlback = "http://prueba-andes-backend.test";
 
-export const getListTaskApi = () => {
+export const getListTaskApi = (title,estadoInterno) => {
   const token = localStorage.getItem("AUTH_TOKEN");
-  const url = /* import.meta.env.VITE_API_URL */ urlback + `/api/tasks`;
+  const url = /* import.meta.env.VITE_API_URL */ urlback + `/api/get-tasks`;
   const params = {
-    method: "GET",
+    method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
       Accept: "application/json",
       "Content-Type": "application/json",
     },
+    body: JSON.stringify({ title: title, status: estadoInterno }),
     withCredentials: true,
   };
 

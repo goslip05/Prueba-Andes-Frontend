@@ -56,8 +56,8 @@ export default function Sidebar({ user }) {
       <hr className="sidebar-divider my-0" />
 
       <li className={`nav-item ${location.pathname === '/panel/perfil' ? 'active' : ''}`}>
-        <Link to={'/panel/perfil'} className="nav-link">
-          <FaWarehouse style={{ marginRight: '8px', fontSize: '20px' }} />
+        <Link to={'/panel/user'} className="nav-link">
+          < FaUsers style={{ marginRight: '8px', fontSize: '20px' }} />
           <span style={{ fontSize: '16px', fontWeight: 'bold', color: '#f8f9fc' }}>Perfil</span>
         </Link>
       </li>
@@ -66,7 +66,7 @@ export default function Sidebar({ user }) {
 
       <li className={`nav-item ${location.pathname === '/panel/tareas' ? 'active' : ''}`}>
         <Link to={'/panel/tareas'} className="nav-link">
-          <FaUsers style={{ marginRight: '8px', fontSize: '20px' }} />
+          <FaWarehouse style={{ marginRight: '8px', fontSize: '20px' }} />
           <span style={{ fontSize: '16px', fontWeight: 'bold', color: '#f8f9fc' }}>Tareas</span>
         </Link>
       </li>
