@@ -5,30 +5,32 @@ import "./Login.css";
 import logo from "../../assets/images/logo andes.png";
 import { Link } from "react-router-dom";
 
-export default function Login() {
+export default function Register() {
   const { updateTitlePage } = useFunctions();
 
   const [errores, setErrores] = useState([]);
 
   //actualizar titulo pagina
-  updateTitlePage("Login");
+  updateTitlePage("Registro");
 
   //datos
+  const nameRef = createRef();
   const emailRef = createRef();
   const passwordRef = createRef();
 
   //instanciando
-  const { login } = useAuth({ middleware: "guest", url: "/panel" });
+  const { registro } = useAuth({ middleware: "guest", url: "/panel" });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const datos = {
+      name: nameRef.current.value,
       email: emailRef.current.value,
       password: passwordRef.current.value,
     };
 
-    login(datos, setErrores);
+    registro(datos, setErrores);
   };
 
   return (
@@ -46,6 +48,19 @@ export default function Login() {
             </div>
 
             <form onSubmit={handleSubmit}>
+              <div className="form-floating mb-3">
+                <input
+                  type="text"
+                  className={`form-control `}
+                  id="name"
+                  name="name"
+                  placeholder="Tu nombre"
+                  ref={nameRef}
+                  required
+                />
+                <label htmlFor="name">Nombre</label>
+              </div>
+
               <div className="form-floating mb-3">
                 <input
                   type="email"
@@ -73,19 +88,14 @@ export default function Login() {
               </div>
 
               <button type="submit" className="btn btn-primary w-100 py-3 mb-4">
-                Iniciar Sesión
+                Registrarme
               </button>
 
               <p className="text-center mb-0">
-                No tienes una cuenta?{" "}
-                
-                <Link
-                  to={`/register`}
-                  className="text-decoration-non"
-                >
-                  Registrarme
+                Ya tienes una cuenta?{" "}
+                <Link to={`/login`} className="text-decoration-non">
+                  Iniciar sesión
                 </Link>
-                
               </p>
             </form>
           </div>

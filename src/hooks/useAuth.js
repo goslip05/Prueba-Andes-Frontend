@@ -67,7 +67,7 @@ export const useAuth = ({middleware, url}) => {
           },
         });
   
-        localStorage.setItem('AUTH_TOKEN', response.data.token);
+        localStorage.setItem('AUTH_TOKEN', response.data.access_token);
         setErrores([]);
         await mutate();
         window.location.href = '/panel';
@@ -115,6 +115,94 @@ export const useAuth = ({middleware, url}) => {
       setErrores(Object.values(responseData?.errors || {}));
     }
     };
+
+    const registro = async (datos, setErrores) => {
+      try {
+        // Mostrar el modal de carga
+        MySwal.fire({
+          icon: 'info',
+          title: '¡Registrando usuario!',
+          text: 'Validando datos, espere por favor...',
+          timerProgressBar: true,
+          didOpen: () => {
+            MySwal.showLoading();
+          },
+        });
+    
+        const response = await clienteAxios.post('/api/register', datos);
+    
+        // Verificar si hay errores en la respuesta
+        if (response.data && response.data.errors && Object.keys(response.data.errors).length > 0) {
+          MySwal.fire({
+            icon: 'error',
+            title: 'Se presentó un error!',
+            text: Object.values(response.data.errors).flat().join('\n'),
+            confirmButtonColor: '#023d67',
+            confirmButtonText: 'Entendido!',
+            allowOutsideClick: false,
+          });
+        } else {
+          // registro exitoso
+          MySwal.fire({
+            icon: 'success',
+            text: 'Te registraste exitosamente, redireccionando...',
+            showConfirmButton: false,
+            allowOutsideClick: true,
+            didOpen: () => {
+              MySwal.showLoading();
+            },
+          });
+          setErrores([]);
+          await mutate();
+          setTimeout(() => {
+            MySwal.close();
+            navigate("/login");
+          }, 2000);
+        }
+      } catch (error) {
+        // Finalizar el modal de carga
+        MySwal.close();
+    
+        const responseData = error.response?.data;
+    
+        if (error.response?.status === 401) {
+          // Error de credenciales inválidas
+          MySwal.fire({
+            icon: 'error',
+            title: 'Credenciales inválidas',
+            text: responseData?.message || 'Las credenciales ingresadas son incorrectas.',
+            confirmButtonColor: '#023d67',
+            confirmButtonText: 'Entendido!',
+            allowOutsideClick: false,
+          });
+        } else if (responseData?.errors && Object.keys(responseData.errors).length > 0) {
+          // Error de validación (asegúrate de que errors exista y tenga al menos una clave)
+          MySwal.fire({
+            icon: 'error',
+            title: 'Se presentó un error!',
+            text: Object.values(responseData.errors).flat().join('\n'),
+            confirmButtonColor: '#023d67',
+            confirmButtonText: 'Entendido!',
+            allowOutsideClick: false,
+          });
+        } else {
+          // Otro tipo de error o error desconocido
+          console.error('Error desconocido:', error);
+          MySwal.fire({
+            icon: 'error',
+            title: 'Se presentó un error!',
+            text: 'Ocurrió un error inesperado, por favor intente de nuevo.',
+            confirmButtonColor: '#023d67',
+            confirmButtonText: 'Entendido!',
+            allowOutsideClick: false,
+          });
+        }
+    
+        // Establecer los errores solo si responseData.errors existe
+        setErrores(Object.values(responseData?.errors || {}));
+      }
+      };
+  
   
 
    const logout = async () =>{
@@ -147,6 +235,7 @@ export const useAuth = ({middleware, url}) => {
    return {
       login,
       logout,
+      registro,
       user,
       error
    }
